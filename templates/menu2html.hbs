@@ -1,12 +1,13 @@
 <html>
   <head>
-    <title>Chuck's CD Live Tap List</title>
+    <title>Chuck's CD Live Tap Lists</title>
+
+    <link rel="stylesheet" type="text/css" href="menu_styling.css"/>
 
     <!-- Toottip stuff -->
     <script type="text/javascript" src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="tipped.js"></script>
     <link rel="stylesheet" type="text/css" href="tipped.css"/>
-
 
     <script>
       function refresh() {
@@ -54,10 +55,10 @@
         }
   
       table.sortable tr:nth-child(odd) td{
-        background: #FFF
+        background: #202020
         }
       table.sortable tr:nth-child(even) td{
-        background: #EEE
+        background: #404040
         }
   
       p {
@@ -73,7 +74,7 @@
     <script src="sorttable.js"></script>
   </head>
   <body>
-    <h2 style='padding: 25px 10px 10px 20px'>Chuck's CD Live Taplist</h2>
+    <h2 class='pageTitle' style='padding: 25px 10px 10px 20px'>Chuck's CD Live Taplist</h2>
     <table class='sortable'>
       <thead id='tableHead'>
         <tr>
@@ -90,7 +91,7 @@
       </thead>
       <tbody>
       {{#each this}}
-        <tr>
+        <tr class='{{beerType}}'>
 	  <td align='right'>{{id}}</td>
 	  <td align='left'>{{beerName}}</td>
           <td align='left'>{{brewery}}</td>
@@ -124,6 +125,8 @@
       {{/each}}
       </tbody>
     </table>
+
+    <!--
     <p>
       <span style='font-weight:bold'>Tech details:</span>
       on the server, this page is rebuilt every minute but once loaded in the
@@ -136,8 +139,10 @@
       Or for the very latest, just visit <a href='http://www.chuckscd.com/'>the real Chuck's CD website</a>,
       from which the data on this page is screen scraped.
     </p>
+    -->
+    
     <p>
-      This page was create: {{nowDateTime}}
+      This page should have been created no more than 5 minutes ago. This page was create: {{nowDateTime}}
     </p>
   </body>
 </html>

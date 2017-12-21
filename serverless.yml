@@ -1,5 +1,8 @@
 service: chucker
 
+plugins:
+  - serverless-offline
+  
 provider:
   name: aws
   runtime: nodejs6.10
@@ -9,11 +12,13 @@ provider:
 #  region: us-east-1
 
 # you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:PutObject"
+        - "s3:GetObject"
+        - "s3:PutObjectAcl"
+      Resource: "arn:aws:s3:::chucksmenu/*"
 #    - Effect: "Allow"
 #      Action:
 #        - "s3:PutObject"
@@ -45,10 +50,16 @@ functions:
     handler: src/lambdas/ftp_tester/ftp_tester.testFtp
     
   updater:
-    handler: chucks_parser.freshenMenu
-#    events:
-#      - schedule: rate(1 minutes)
+    handler: chucks_processor.freshenMenu
+    events:
+      - schedule: rate(1 minute)
 
+  # This was made for testing the theory that Lamda cannot overwrite root's files.
+  # I.e. why is getObject working but putObject gets AccessDenied
+  seeder:
+    handler: seed_beers_dot_json.seedBeersDotJson
+    # no events just invoked manual (once hopefully) for AWS Console Web UI
+    
 #      - http:
 #          path: users/create
 #          method: get

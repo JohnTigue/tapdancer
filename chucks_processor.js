@@ -12,6 +12,7 @@
   let fileOpts = {
     menuTemplateFilename: "templates/menu2html.hbs",
     menuRenderedFilename: "/tmp/index.html",
+    menuRenderedPutToS3: "s3://chucksmenu/index.html", // this is the main artifact output URL i.e. where what was made goes when done
     beersAsJsonFilename: "/tmp/beers.json",
     beersAsJsonInS3: "s3://chucksmenu/beers.json"
   };
@@ -64,11 +65,12 @@
     let aBeerName =  $(anEl).find(".draft_name").text();  
     //console.log('brew:' + aBeerName);
 
-    let noGrowlersAvailable = false;
     let aGrowlerPrice = 0;
     let rawGrowlerPrice = $(anEl).find(".draft_growler").text();
+    let noGrowlersAvailable = false;
     if (rawGrowlerPrice !== "N/A") {
       aGrowlerPrice = parseFloat(rawGrowlerPrice.slice(1));
+      console.log(aGrowlerPrice);
     } else {
       noGrowlersAvailable = true;
     }
@@ -221,7 +223,7 @@
           return getBeersDotJson
             .then(data => {
               console.log("getBeersDotJson seems to have worked:");
-              console.log(data.Body.toString());
+              //console.log(data.Body.toString());
               return data.Body.toString();
             })
             .then(previousBeersDotJsonContents => {
@@ -239,6 +241,7 @@
                 ContentType: "application/json",
                 ACL: "public-read"
               };
+              console.log("About to put beersAsJson");
               var putBeersDotJson = s3.putObject(putParams).promise();
               return putBeersDotJson
                 .then(() => {
@@ -303,6 +306,40 @@
           });
       })
       .then(menuRenderedString => {
+        // S3.putObject() the menuRenderedString
+        let putDestS3Url = fileOpts.menuRenderedPutToS3;
+        if (!s3urls.valid(putDestS3Url)) {
+          // not sure how we could ever get to this case but, hey why not check anyway
+          console.error("bad S3 URL: " + putDestS3Url);
+          return Promise.reject("bad S3 URL: " + putDestS3Url);
+        } else {
+          let s3Deets = s3urls.fromUrl(putDestS3Url);
+          //console.log('Key:' + s3Deets.Key + ' Bucket:' + s3Deets.Bucket);
+          let menuS3DestParams = { Bucket: s3Deets.Bucket, Key: s3Deets.Key };
+
+        
+          let putParams = {
+            Body: menuRenderedString,
+            Bucket: s3Deets.Bucket,
+            Key: s3Deets.Key,
+            ContentType: "text/html",
+            ACL: "public-read"
+          };
+          var putMenuHtml = s3.putObject(putParams).promise();
+          return putMenuHtml
+          .then(() => {
+            console.log(
+              "putObject(menu as " + s3Deets.Key + ") to S3 worked." 
+            );
+            return "Who cares? Put is done.";
+          })
+          .catch(err => {
+            console.log("putBeersDotJson errored " + err);
+            return Promise.reject(err);
+          });
+        }
+        
+        /* v0.1.x sent fileOpts.menuTemplateFilename to tigue.com/chucks via FTP
         // FTP put the rendered menu page to tigue.com/chuckscd
         console.log("mrs.length:" + menuRenderedString.length);
         return fs
@@ -342,7 +379,9 @@
                   }
                 }, 50);
               });
-          });        
+          });
+         */
+        
       })
       .catch(err => {
         console.log("main webFetch() catch :" + err);
@@ -364,6 +403,8 @@
       console.log("done");
       callback();
     });
+
+    
   };
 
   /*
@@ -417,7 +458,11 @@ testS3Read();
       moment().tz("America/Los_Angeles").format("M/D[@]HH[:]mm")
   );
   // JFT-TODO: so then the init load of this code into lambda will run freshneMenu twice, no?
-  exports.freshenMenu({}, {}, () =>
-    console.log("done mimicking Lambad invoke")
-  );
+
+  // this is for invoking freshenMenu from localhost where it's triggered by, say, cron
+//  exports.freshenMenu({}, {}, () =>
+//    console.log("done mimicking Lambad invoke")
+//  );
+
+
 })();
