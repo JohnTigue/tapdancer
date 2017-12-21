@@ -29,11 +29,12 @@
   const s3urls = require("s3urls");
   const webFetch = require("request-promise");
 
+  const $ = cheerio.load(""); //TODO: is this needed?
+
+  /* Not doing FTP any more, just S3.putObject()
   // works on osx but not lambda
   //const PromiseFtp = require('promise-ftp');
   const JSFtp = require("jsftp");
-
-  const $ = cheerio.load(""); //TODO: is this needed?
 
   // not in lambda sadly: let ftp = new PromiseFtp();
   let ftpOpts = {
@@ -49,7 +50,10 @@
     pass: ftpOpts.password,
     port: 21
   });
+   */
 
+  let Ftp = null;
+  
   // https://github.com/nknapp/promised-handlebars
   global.Promise = Promise;
   let promisedHandlebars = require("promised-handlebars");
@@ -69,8 +73,14 @@
     let rawGrowlerPrice = $(anEl).find(".draft_growler").text();
     let noGrowlersAvailable = false;
     if (rawGrowlerPrice !== "N/A") {
-      aGrowlerPrice = parseFloat(rawGrowlerPrice.slice(1));
-      console.log(aGrowlerPrice);
+      try {
+        aGrowlerPrice = parseFloat(rawGrowlerPrice);//.slice(1));
+      } catch(e) {
+        console.error( "couldn't parseFloat(" + rawGrowlerPrice + ")" );
+        aGrowlerPrice = 0.00;
+        noGrowlersAvailable = true;
+      }
+      //console.log(rawGrowlerPrice + " => " + aGrowlerPrice);
     } else {
       noGrowlersAvailable = true;
     }
@@ -105,6 +115,11 @@
     }
 
     let alcoolVolume = parseFloat($(anEl).find(".draft_abv").text());
+    if(isNaN(alcoolVolume)){
+      alcoolVolume = 0.0;
+    }
+    console.info($(anEl).find(".draft_abv").text() + " => " + alcoolVolume);
+      
     let onceOfAlcoolPerDollar = 16 * (alcoolVolume / 100) / pintPrice;
     // console.error( onceOfAlcoolPerDollar);
 

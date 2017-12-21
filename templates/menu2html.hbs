@@ -91,11 +91,11 @@
       </thead>
       <tbody>
       {{#each this}}
-        <tr class='{{beerType}}'>
+        <tr>
 	  <td align='right'>{{id}}</td>
 	  <td align='left'>{{beerName}}</td>
           <td align='left'>{{brewery}}</td>
-	  <td align='left'>{{beerType}}</td>
+	  <td align='left' class='{{beerType}}'>{{beerType}}</td>
 	  
           {{#if doublePricing}}
             <td align='right' class='oddPricing simple-tooltip' title='Probably a half pint, 8 oz.'>${{pintPrice}}</td>
