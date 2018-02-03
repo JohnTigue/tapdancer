@@ -1,6 +1,7 @@
-/* This file upgrades chuckscd.com beer menu from HTML to JSON (and the JSON is persisted to S3 and made publicly available).
- * It also generates a very simple (but sortable) HTML page.
- *xb 
+/* This file screen scrapes chucks.com beer menu from HTML to JSON (and
+ * the JSON is persisted to S3 and made publicly available).  It also
+ * generates a very simple (but sortable) HTML page.
+ *
  * License: MIT
  * Author: John Tigue (john@tigue.com)
  */
@@ -8,14 +9,19 @@
   "use strict";
 
   let globalCallback = null;
+  
+  const config = require("../../configuration");
 
+  /* TODO: kill
+  let s3BucketPublishDest = "chuckstaplist.com";
   let fileOpts = {
     menuTemplateFilename: "templates/menu2html.hbs",
     menuRenderedFilename: "/tmp/index.html",
-    menuRenderedPutToS3: "s3://chucksmenu/index.html", // this is the main artifact output URL i.e. where what was made goes when done
+    menuRenderedPutToS3: "s3://" + s3BucketPublishDest + "/index.html", // The main artifact output URL i.e. where what was made goes when done
     beersAsJsonFilename: "/tmp/beers.json",
-    beersAsJsonInS3: "s3://chucksmenu/beers.json"
+    beersAsJsonInS3: "s3://" + s3BucketPublishDest + "/beers.json"
   };
+   */
 
   const Promise = require("bluebird");
 

@@ -5,11 +5,9 @@ plugins:
   
 provider:
   name: aws
+  region: us-east-1
   runtime: nodejs6.10
-
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
+  stage: dev
 
 # you can add statements to the Lambda function's IAM Role here
   iamRoleStatements:
@@ -18,7 +16,7 @@ provider:
         - "s3:PutObject"
         - "s3:GetObject"
         - "s3:PutObjectAcl"
-      Resource: "arn:aws:s3:::chucksmenu/*"
+      Resource: "arn:aws:s3:::chuckstaplist.com/*"
 #    - Effect: "Allow"
 #      Action:
 #        - "s3:PutObject"
@@ -43,22 +41,24 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: handler.hello
-
-  ftp-tester:
-    handler: src/lambdas/ftp_tester/ftp_tester.testFtp
-    
   updater:
-    handler: chucks_processor.freshenMenu
+    handler: src/lambdas/chucksProcessor/ChucksProcessor.freshenMenu
     events:
       - schedule: rate(1 minute)
 
+  # TODO: Kill these 3      
   # This was made for testing the theory that Lamda cannot overwrite root's files.
   # I.e. why is getObject working but putObject gets AccessDenied
   seeder:
     handler: seed_beers_dot_json.seedBeersDotJson
     # no events just invoked manual (once hopefully) for AWS Console Web UI
+    
+  hello:
+    handler: handler.hello
+
+  # TODO: Kill this off since not FTPing anymore
+  ftp-tester:
+    handler: src/lambdas/ftp_tester/ftp_tester.testFtp
     
 #      - http:
 #          path: users/create

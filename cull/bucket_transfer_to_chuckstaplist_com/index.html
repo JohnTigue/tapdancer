@@ -1,0 +1,1019 @@
+<html>
+  <head>
+    <title>Chuck's CD Live Tap Lists</title>
+
+    <link rel="stylesheet" type="text/css" href="menu_styling.css"/>
+
+    <!-- Toottip stuff -->
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="tipped.js"></script>
+    <link rel="stylesheet" type="text/css" href="tipped.css"/>
+
+    <script>
+      function refresh() {
+        window.location.reload(true);
+        }
+    
+      var aMinute = 60000;
+      setTimeout(refresh, 5 * aMinute);
+    </script>
+    
+    <script type="text/javascript">
+      $(document).ready(function() {
+        Tipped.create('.simple-tooltip', {skin: 'only default unless pay', position: 'topright' });
+      });
+    </script>
+    
+    <style>
+      .uncertainBooziness{
+        color: silver;
+        }
+  
+      .noGrowlersAvailable {
+        color: silver;
+        }
+  
+      .oddPricing {
+        color: #d8150f;
+        }
+      
+      table {
+        border-collapse: collapse;
+        width:100%;
+        }
+  
+      th, td {
+        padding: 7px 14px 7px 14px;
+        }
+  
+      /*    table.sortable thead { */
+      #tableHead {
+        background-color:#ccc;
+        color:#444444;
+        font-weight: bold;
+        cursor: default;
+        }
+  
+      table.sortable tr:nth-child(odd) td{
+        background: #202020
+        }
+      table.sortable tr:nth-child(even) td{
+        background: #404040
+        }
+  
+      p {
+        padding: 5px 10px 5px 10px;
+        }
+      
+      body {
+        margin:0px;
+        padding:0px;
+        font-family: sans-serif;
+        }
+    </style>
+    <script src="sorttable.js"></script>
+  </head>
+  <body>
+    <h2 class='pageTitle' style='padding: 25px 10px 10px 20px'>Chuck's CD Live Taplist</h2>
+    <table class='sortable'>
+      <thead id='tableHead'>
+        <tr>
+	  <th align='right' class='simple-tooltip' title='Tap #'>#</th>
+	  <th align='left'>Brew</th>
+          <th align='left'>Brewer</th>
+          <th align='left'>Type</th>
+	  <th align='right'>Pint</th>
+	  <th align='right'>Growler</th>
+	  <th align='right' class='simple-tooltip' title='Alcohol By Volume'>ABV</th>
+	  <th align='left' class='simple-tooltip' title='Alcohol By Dollar (ABV/$Pint)'>AB$</th>
+	  <th class='simple-tooltip' title='Time keg was tapped'>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+	  <td align='right'>1</td>
+	  <td align='left'>Apricot Cider</td>
+          <td align='left'>Atlas</td>
+	  <td align='left' class='Cider'>Cider</td>
+	  
+            <td align='right'>$6.00</td>                        
+	  
+            <td align='right'>$18.00</td>                        
+
+          <td align='right'>6.0%</td>
+
+            <td aligh='right'>0.16</td>
+
+
+          <td align='right'>1/17@22h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>2</td>
+	  <td align='left'>Hopped Marionberry Cider</td>
+          <td align='left'>Incline</td>
+	  <td align='left' class='Cider'>Cider</td>
+	  
+            <td align='right'>$5.50</td>                        
+	  
+            <td align='right'>$17.00</td>                        
+
+          <td align='right'>6.5%</td>
+
+            <td aligh='right'>0.19</td>
+
+
+          <td align='right'>1/20@21h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>3</td>
+	  <td align='left'>Space Bloody Orange Cider</td>
+          <td align='left'>Ace</td>
+	  <td align='left' class='Cider'>Cider</td>
+	  
+            <td align='right'>$5.50</td>                        
+	  
+            <td align='right'>$17.00</td>                        
+
+          <td align='right'>6.9%</td>
+
+            <td aligh='right'>0.20</td>
+
+
+          <td align='right'>1/22@11h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>4</td>
+	  <td align='left'>Habanero Apple Cider</td>
+          <td align='left'>Finn River</td>
+	  <td align='left' class='Cider'>Cider</td>
+	  
+            <td align='right'>$8.00</td>                        
+	  
+            <td align='right'>$24.00</td>                        
+
+          <td align='right'>6.9%</td>
+
+            <td aligh='right'>0.14</td>
+
+
+          <td align='right'>1/27@22h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>5</td>
+	  <td align='left'>Light Dry Cider</td>
+          <td align='left'>Ulee&#x27;s</td>
+	  <td align='left' class='Cider'>Cider</td>
+	  
+            <td align='right'>$6.50</td>                        
+	  
+            <td align='right'>$20.00</td>                        
+
+          <td align='right'>4.0%</td>
+
+            <td aligh='right'>0.10</td>
+
+
+          <td align='right'>1/27@16h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>6</td>
+	  <td align='left'>Gin Botanical Cider</td>
+          <td align='left'>Seattle Cider</td>
+	  <td align='left' class='Cider'>Cider</td>
+	  
+            <td align='right'>$8.00</td>                        
+	  
+            <td align='right'>$24.00</td>                        
+
+          <td align='right'>6.8%</td>
+
+            <td aligh='right'>0.14</td>
+
+
+          <td align='right'>2/01@16h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>7</td>
+	  <td align='left'>Mexican Chocolate Imp Stout *8oz</td>
+          <td align='left'>Fort George</td>
+	  <td align='left' class='Stout'>Stout</td>
+	  
+            <td align='right' class='oddPricing simple-tooltip' title='Probably a half pint, 8 oz.'>$7.50</td>
+	  
+            <td align='right'>$45.00</td>                        
+
+          <td align='right'>10.5%</td>
+
+            <td aligh='right'>0.11</td>
+
+
+          <td align='right'>1/27@21h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>8</td>
+	  <td align='left'>Barren Wood BA B-Wine (8oz)</td>
+          <td align='left'>Skookum</td>
+	  <td align='left' class='Stout'>Stout</td>
+	  
+            <td align='right' class='oddPricing simple-tooltip' title='Probably a half pint, 8 oz.'>$6.00</td>
+	  
+            <td align='right'>$36.00</td>                        
+
+          <td align='right'>10.4%</td>
+
+            <td aligh='right'>0.14</td>
+
+
+          <td align='right'>1/20@16h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>9</td>
+	  <td align='left'>Sumpin Easy Pale Ale</td>
+          <td align='left'>Lagunitas</td>
+	  <td align='left' class='-'>-</td>
+	  
+            <td align='right'>$5.00</td>                        
+	  
+            <td align='right'>$15.00</td>                        
+
+          <td align='right'>5.7%</td>
+
+            <td aligh='right'>0.18</td>
+
+
+          <td align='right'>1/27@21h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>10</td>
+	  <td align='left'>Export Stout</td>
+          <td align='left'>Stoup</td>
+	  <td align='left' class='Stout'>Stout</td>
+	  
+            <td align='right'>$5.00</td>                        
+	  
+            <td align='right'>$15.00</td>                        
+
+          <td align='right'>7.0%</td>
+
+            <td aligh='right'>0.22</td>
+
+
+          <td align='right'>1/27@16h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>11</td>
+	  <td align='left'>Hefeweizen</td>
+          <td align='left'>Seapine</td>
+	  <td align='left' class='-'>-</td>
+	  
+            <td align='right'>$4.50</td>                        
+	  
+            <td align='right'>$14.00</td>                        
+
+          <td align='right'>5.3%</td>
+
+            <td aligh='right'>0.19</td>
+
+
+          <td align='right'>1/30@11h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>12</td>
+	  <td align='left'>India Pale Ale</td>
+          <td align='left'>Seapine</td>
+	  <td align='left' class='IPA'>IPA</td>
+	  
+            <td align='right'>$4.50</td>                        
+	  
+            <td align='right'>$14.00</td>                        
+
+          <td align='right'>5.6%</td>
+
+            <td aligh='right'>0.20</td>
+
+
+          <td align='right'>1/30@19h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>13</td>
+	  <td align='left'>Odin&#x27;s Gift Juniper Amber</td>
+          <td align='left'>Odin</td>
+	  <td align='left' class='-'>-</td>
+	  
+            <td align='right'>$6.50</td>                        
+	  
+            <td align='right'>$20.00</td>                        
+
+          <td align='right'>5.4%</td>
+
+            <td aligh='right'>0.13</td>
+
+
+          <td align='right'>1/30@20h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>14</td>
+	  <td align='left'>Little Big Hop ISA</td>
+          <td align='left'>2nd Shift</td>
+	  <td align='left' class='IPA'>IPA</td>
+	  
+            <td align='right'>$10.00</td>                        
+	  
+            <td align='right'>$30.00</td>                        
+
+          <td align='right'>4.9%</td>
+
+            <td aligh='right'>0.08</td>
+
+
+          <td align='right'>1/19@20h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>15</td>
+	  <td align='left'>Curbside Porter</td>
+          <td align='left'>Airways</td>
+	  <td align='left' class='Stout'>Stout</td>
+	  
+            <td align='right'>$6.50</td>                        
+	  
+            <td align='right'>$20.00</td>                        
+
+          <td align='right'>6.3%</td>
+
+            <td aligh='right'>0.16</td>
+
+
+          <td align='right'>1/30@19h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>16</td>
+	  <td align='left'>Kiwis Vs Quails IPA</td>
+          <td align='left'>Engine House 9</td>
+	  <td align='left' class='IPA'>IPA</td>
+	  
+            <td align='right'>$7.50</td>                        
+	  
+            <td align='right'>$23.00</td>                        
+
+          <td align='right'>6.0%</td>
+
+            <td aligh='right'>0.13</td>
+
+
+          <td align='right'>1/29@10h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>17</td>
+	  <td align='left'>Wookus Imperial CDA</td>
+          <td align='left'>Firestone</td>
+	  <td align='left' class='IPA'>IPA</td>
+	  
+            <td align='right'>$7.00</td>                        
+	  
+            <td align='right'>$21.00</td>                        
+
+          <td align='right'>8.2%</td>
+
+            <td aligh='right'>0.19</td>
+
+
+          <td align='right'>1/20@11h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>18</td>
+	  <td align='left'>Berry Milkshake IPA</td>
+          <td align='left'>Riverbend</td>
+	  <td align='left' class='IPA'>IPA</td>
+	  
+            <td align='right'>$5.00</td>                        
+	  
+            <td align='right'>$15.00</td>                        
+
+          <td align='right'>7.0%</td>
+
+            <td aligh='right'>0.22</td>
+
+
+          <td align='right'>1/19@13h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>19</td>
+	  <td align='left'>Peach Milkshake IPA</td>
+          <td align='left'>Riverbend</td>
+	  <td align='left' class='IPA'>IPA</td>
+	  
+            <td align='right'>$5.00</td>                        
+	  
+            <td align='right'>$15.00</td>                        
+
+          <td align='right'>7.0%</td>
+
+            <td aligh='right'>0.22</td>
+
+
+          <td align='right'>1/19@13h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>20</td>
+	  <td align='left'>Duality Nectarine Sour Ale</td>
+          <td align='left'>Urban Family</td>
+	  <td align='left' class='Sour'>Sour</td>
+	  
+            <td align='right'>$8.00</td>                        
+	  
+            <td align='right'>$24.00</td>                        
+
+          <td align='right'>8.0%</td>
+
+            <td aligh='right'>0.16</td>
+
+
+          <td align='right'>1/28@18h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>21</td>
+	  <td align='left'>Breakfast Stout</td>
+          <td align='left'>Founders</td>
+	  <td align='left' class='Stout'>Stout</td>
+	  
+            <td align='right'>$7.00</td>                        
+	  
+            <td align='right'>$21.00</td>                        
+
+          <td align='right'>8.6%</td>
+
+            <td aligh='right'>0.20</td>
+
+
+          <td align='right'>1/29@10h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>22</td>
+	  <td align='left'>Jeune Lambic *8oz</td>
+          <td align='left'>Lindemans</td>
+	  <td align='left' class='Sour'>Sour</td>
+	  
+            <td align='right' class='oddPricing simple-tooltip' title='Probably a half pint, 8 oz.'>$7.00</td>
+	  
+            <td align='right'>$42.00</td>                        
+
+          <td align='right'>2.5%</td>
+
+            <td aligh='right'>0.03</td>
+
+
+          <td align='right'>1/27@14h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>23</td>
+	  <td align='left'>Wanderale Belgian Blonde Ale</td>
+          <td align='left'>Wander</td>
+	  <td align='left' class='-'>-</td>
+	  
+            <td align='right'>$6.50</td>                        
+	  
+            <td align='right'>$20.00</td>                        
+
+          <td align='right'>6.0%</td>
+
+            <td aligh='right'>0.15</td>
+
+
+          <td align='right'>1/28@20h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>24</td>
+	  <td align='left'>Brandy BA Strong Ale *8 oz</td>
+          <td align='left'>Block 15</td>
+	  <td align='left' class='-'>-</td>
+	  
+            <td align='right' class='oddPricing simple-tooltip' title='Probably a half pint, 8 oz.'>$6.00</td>
+	  
+            <td align='right'>$36.00</td>                        
+
+          <td align='right'>11.0%</td>
+
+            <td aligh='right'>0.15</td>
+
+
+          <td align='right'>1/15@22h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>25</td>
+	  <td align='left'>Elk St. IPA</td>
+          <td align='left'>Aslan</td>
+	  <td align='left' class='IPA'>IPA</td>
+	  
+            <td align='right'>$6.00</td>                        
+	  
+            <td align='right'>$18.00</td>                        
+
+          <td align='right'>7.4%</td>
+
+            <td aligh='right'>0.20</td>
+
+
+          <td align='right'>1/30@18h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>26</td>
+	  <td align='left'>Pallet Jack IPA</td>
+          <td align='left'>Barley Brown&#x27;s</td>
+	  <td align='left' class='IPA'>IPA</td>
+	  
+            <td align='right'>$5.50</td>                        
+	  
+            <td align='right'>$17.00</td>                        
+
+          <td align='right'>7.0%</td>
+
+            <td aligh='right'>0.20</td>
+
+
+          <td align='right'>1/28@16h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>27</td>
+	  <td align='left'>Table Beer w/ Nelson Hops</td>
+          <td align='left'>Structures Brewing</td>
+	  <td align='left' class='-'>-</td>
+	  
+            <td align='right'>$5.50</td>                        
+	  
+            <td align='right'>$17.00</td>                        
+
+          <td align='right'>3.9%</td>
+
+            <td aligh='right'>0.11</td>
+
+
+          <td align='right'>1/19@13h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>28</td>
+	  <td align='left'>Roger&#x27;s Pilsner</td>
+          <td align='left'>Georgetown</td>
+	  <td align='left' class='-'>-</td>
+	  
+            <td align='right'>$4.50</td>                        
+	  
+            <td align='right'>$14.00</td>                        
+
+          <td align='right'>4.9%</td>
+
+            <td aligh='right'>0.17</td>
+
+
+          <td align='right'>1/28@16h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>29</td>
+	  <td align='left'>J-Hole Red IPA</td>
+          <td align='left'>Melvin/Rhinegeist</td>
+	  <td align='left' class='IPA'>IPA</td>
+	  
+            <td align='right'>$7.50</td>                        
+	  
+            <td align='right'>$23.00</td>                        
+
+          <td align='right'>7.0%</td>
+
+            <td aligh='right'>0.15</td>
+
+
+          <td align='right'>1/28@20h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>30</td>
+	  <td align='left'>Bourbon Bonne Nuit Belgian *8oz</td>
+          <td align='left'>Holy Mountain</td>
+	  <td align='left' class='-'>-</td>
+	  
+            <td align='right'>$6.50</td>                        
+	  
+            <td align='right' class='noGrowlersAvailable simple-tooltip' title='Limited supply. No growlers please.'>$0.00</td>            
+
+          <td align='right'>10.0%</td>
+
+            <td align='right' class='uncertainBooziness simple-tooltip' style='text-align:left'
+	        title='This could be wrong. Cannot be sure without growler pricing.'>0.25</td>
+
+
+          <td align='right'>1/30@20h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>31</td>
+	  <td align='left'>Agrestic Sour Ale *8oz</td>
+          <td align='left'>Firestone</td>
+	  <td align='left' class='Sour'>Sour</td>
+	  
+            <td align='right'>$9.50</td>                        
+	  
+            <td align='right'>$56.00</td>                        
+
+          <td align='right'>7.0%</td>
+
+            <td aligh='right'>0.12</td>
+
+
+          <td align='right'>1/27@14h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>32</td>
+	  <td align='left'>Imagine Belgian Imp Stout (8oz)</td>
+          <td align='left'>Block 15</td>
+	  <td align='left' class='Stout'>Stout</td>
+	  
+            <td align='right' class='oddPricing simple-tooltip' title='Probably a half pint, 8 oz.'>$8.00</td>
+	  
+            <td align='right'>$48.00</td>                        
+
+          <td align='right'>15.0%</td>
+
+            <td aligh='right'>0.15</td>
+
+
+          <td align='right'>1/15@16h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>33</td>
+	  <td align='left'>Pineapple Mango Hazy Pale Ale</td>
+          <td align='left'>Oakshire</td>
+	  <td align='left' class='-'>-</td>
+	  
+            <td align='right'>$6.50</td>                        
+	  
+            <td align='right'>$20.00</td>                        
+
+          <td align='right'>5.4%</td>
+
+            <td aligh='right'>0.13</td>
+
+
+          <td align='right'>1/29@11h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>34</td>
+	  <td align='left'>Autumnal Rustica Rye Saison</td>
+          <td align='left'>Holy Mountain</td>
+	  <td align='left' class='-'>-</td>
+	  
+            <td align='right'>$6.50</td>                        
+	  
+            <td align='right' class='noGrowlersAvailable simple-tooltip' title='Limited supply. No growlers please.'>$0.00</td>            
+
+          <td align='right'>6.0%</td>
+
+            <td align='right' class='uncertainBooziness simple-tooltip' style='text-align:left'
+	        title='This could be wrong. Cannot be sure without growler pricing.'>0.15</td>
+
+
+          <td align='right'>1/30@20h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>35</td>
+	  <td align='left'>Secretsicle Blazey IPA</td>
+          <td align='left'>Block 15</td>
+	  <td align='left' class='IPA'>IPA</td>
+	  
+            <td align='right'>$6.00</td>                        
+	  
+            <td align='right'>$18.00</td>                        
+
+          <td align='right'>6.4%</td>
+
+            <td aligh='right'>0.17</td>
+
+
+          <td align='right'>1/31@19h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>36</td>
+	  <td align='left'>Chocolate Porter</td>
+          <td align='left'>Block 15</td>
+	  <td align='left' class='Stout'>Stout</td>
+	  
+            <td align='right'>$5.00</td>                        
+	  
+            <td align='right'>$15.00</td>                        
+
+          <td align='right'>5.5%</td>
+
+            <td aligh='right'>0.18</td>
+
+
+          <td align='right'>1/26@17h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>37</td>
+	  <td align='left'>Lomaland Saison</td>
+          <td align='left'>Modern Times</td>
+	  <td align='left' class='-'>-</td>
+	  
+            <td align='right'>$6.50</td>                        
+	  
+            <td align='right'>$20.00</td>                        
+
+          <td align='right'>5.5%</td>
+
+            <td aligh='right'>0.14</td>
+
+
+          <td align='right'>1/28@19h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>38</td>
+	  <td align='left'>Vanilla Rhino Suit Stout (8oz)</td>
+          <td align='left'>Alesong</td>
+	  <td align='left' class='Stout'>Stout</td>
+	  
+            <td align='right' class='oddPricing simple-tooltip' title='Probably a half pint, 8 oz.'>$9.00</td>
+	  
+            <td align='right'>$54.00</td>                        
+
+          <td align='right'>11.0%</td>
+
+            <td aligh='right'>0.10</td>
+
+
+          <td align='right'>1/27@14h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>39</td>
+	  <td align='left'>Black Beer</td>
+          <td align='left'>Holy Mountain</td>
+	  <td align='left' class='Stout'>Stout</td>
+	  
+            <td align='right'>$6.50</td>                        
+	  
+            <td align='right'>$20.00</td>                        
+
+          <td align='right'>4.0%</td>
+
+            <td aligh='right'>0.10</td>
+
+
+          <td align='right'>1/31@18h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>40</td>
+	  <td align='left'>Father&#x27;s Winter Ale</td>
+          <td align='left'>Cloudburst</td>
+	  <td align='left' class='-'>-</td>
+	  
+            <td align='right'>$7.50</td>                        
+	  
+            <td align='right'>$23.00</td>                        
+
+          <td align='right'>7.6%</td>
+
+            <td aligh='right'>0.16</td>
+
+
+          <td align='right'>1/31@18h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>41</td>
+	  <td align='left'>Pistol Fingers IPA</td>
+          <td align='left'>Stoup</td>
+	  <td align='left' class='IPA'>IPA</td>
+	  
+            <td align='right'>$6.00</td>                        
+	  
+            <td align='right'>$18.00</td>                        
+
+          <td align='right'>6.9%</td>
+
+            <td aligh='right'>0.18</td>
+
+
+          <td align='right'>1/28@16h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>42</td>
+	  <td align='left'>Willet Bourbon BA Imperial Stout</td>
+          <td align='left'>Lagunitas</td>
+	  <td align='left' class='Stout'>Stout</td>
+	  
+            <td align='right'>$7.50</td>                        
+	  
+            <td align='right'>$23.00</td>                        
+
+          <td align='right'>12.6%</td>
+
+            <td aligh='right'>0.27</td>
+
+
+          <td align='right'>1/28@18h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>43</td>
+	  <td align='left'>S&amp;Z Awesome Beer Great Job IIIPA</td>
+          <td align='left'>Cloudburst</td>
+	  <td align='left' class='-'>-</td>
+	  
+            <td align='right'>$9.50</td>                        
+	  
+            <td align='right'>$29.00</td>                        
+
+          <td align='right'>9.9%</td>
+
+            <td aligh='right'>0.17</td>
+
+
+          <td align='right'>1/30@16h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>44</td>
+	  <td align='left'>Singhaze Rice IPA</td>
+          <td align='left'>Skookum</td>
+	  <td align='left' class='IPA'>IPA</td>
+	  
+            <td align='right'>$6.00</td>                        
+	  
+            <td align='right'>$18.00</td>                        
+
+          <td align='right'>6.4%</td>
+
+            <td aligh='right'>0.17</td>
+
+
+          <td align='right'>1/20@14h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>45</td>
+	  <td align='left'>Nectarine Cobbler Sour Ale *8 oz</td>
+          <td align='left'>Almanac</td>
+	  <td align='left' class='Sour'>Sour</td>
+	  
+            <td align='right'>$9.50</td>                        
+	  
+            <td align='right'>$56.00</td>                        
+
+          <td align='right'>7.2%</td>
+
+            <td aligh='right'>0.12</td>
+
+
+          <td align='right'>1/27@18h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>46</td>
+	  <td align='left'>Beatitude Sour with Apricot *8oz</td>
+          <td align='left'>Council Brewing</td>
+	  <td align='left' class='Sour'>Sour</td>
+	  
+            <td align='right' class='oddPricing simple-tooltip' title='Probably a half pint, 8 oz.'>$6.00</td>
+	  
+            <td align='right'>$36.00</td>                        
+
+          <td align='right'>4.5%</td>
+
+            <td aligh='right'>0.06</td>
+
+
+          <td align='right'>1/21@12h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>47</td>
+	  <td align='left'>Kolsch</td>
+          <td align='left'>Chuckanut</td>
+	  <td align='left' class='-'>-</td>
+	  
+            <td align='right'>$6.50</td>                        
+	  
+            <td align='right'>$20.00</td>                        
+
+          <td align='right'>5.0%</td>
+
+            <td aligh='right'>0.12</td>
+
+
+          <td align='right'>1/31@18h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>48</td>
+	  <td align='left'>BA Numbskull B-Wine &#x27;16 (8oz)</td>
+          <td align='left'>AleSmith</td>
+	  <td align='left' class='Stout'>Stout</td>
+	  
+            <td align='right' class='oddPricing simple-tooltip' title='Probably a half pint, 8 oz.'>$12.00</td>
+	  
+            <td align='right'>$72.00</td>                        
+
+          <td align='right'>11.0%</td>
+
+            <td aligh='right'>0.07</td>
+
+
+          <td align='right'>1/15@16h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>49</td>
+	  <td align='left'>NITRO:Coffee Monsters&#x27; Park (8oz)</td>
+          <td align='left'>Modern Times</td>
+	  <td align='left' class='Stout'>Stout</td>
+	  
+            <td align='right'>$12.00</td>                        
+	  
+            <td align='right' class='noGrowlersAvailable simple-tooltip' title='Limited supply. No growlers please.'>$0.00</td>            
+
+          <td align='right'>13.0%</td>
+
+            <td align='right' class='uncertainBooziness simple-tooltip' style='text-align:left'
+	        title='This could be wrong. Cannot be sure without growler pricing.'>0.17</td>
+
+
+          <td align='right'>1/15@16h</td>
+
+        </tr>
+        <tr>
+	  <td align='right'>50</td>
+	  <td align='left'>NITRO: Coffee Hazelnut Stout</td>
+          <td align='left'>Cloudburst</td>
+	  <td align='left' class='Stout'>Stout</td>
+	  
+            <td align='right'>$9.00</td>                        
+	  
+            <td align='right' class='noGrowlersAvailable simple-tooltip' title='Limited supply. No growlers please.'>$0.00</td>            
+
+          <td align='right'>9.1%</td>
+
+            <td align='right' class='uncertainBooziness simple-tooltip' style='text-align:left'
+	        title='This could be wrong. Cannot be sure without growler pricing.'>0.16</td>
+
+
+          <td align='right'>1/30@20h</td>
+
+        </tr>
+      </tbody>
+    </table>
+
+    <!--
+    <p>
+      <span style='font-weight:bold'>Tech details:</span>
+      on the server, this page is rebuilt every minute but once loaded in the
+      browser this page self-refreshes every five minutes.
+      It could self-refresh every minute but during refresh any
+      column sorting is reset and that can get annoying while reading.
+    </p>
+    <p>
+      Of course, you can manually reload at any time.
+      Or for the very latest, just visit <a href='http://www.chuckscd.com/'>the real Chuck's CD website</a>,
+      from which the data on this page is screen scraped.
+    </p>
+    -->
+    
+    <p>
+      This page should have been created no more than 5 minutes ago. This page was create: 2/1@19:39
+    </p>
+  </body>
+</html>

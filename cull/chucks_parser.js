@@ -1,6 +1,6 @@
 /* This file upgrades chuckscd.com beer menu from HTML to JSON (and the JSON is persisted to S3 and made publicly available).
  * It also generates a very simple (but sortable) HTML page.
- *xb 
+ *
  * License: MIT
  * Author: John Tigue (john@tigue.com)
  */
