@@ -347,7 +347,7 @@
 
     doYourThing().then(() => {
       console.log("done");
-      callback();
+      callback(null, "success");
     });
   };
 })();

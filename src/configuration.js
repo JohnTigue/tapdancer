@@ -13,19 +13,21 @@ const devDestBucketName = "chuckstaplist-dev";
 const prodDestBucketName = "chuckstaplist.com";
 
 if(process.env.stage === "production") {
-  console.log("Setting configuration for production stage")
-  module.exports.configuration = makeConfiguration(prodDestBucketName);
+  console.log("Setting configuration for production stage");
+  let menuTemplateFileName = "src/templates/menu2html.hbs";
+  module.exports.configuration = makeConfiguration(prodDestBucketName, menuTemplateFileName);
 } else if(process.env.stage === "develop") {
-  console.log("Setting configuration for develop stage")
-  module.exports.configuration = makeConfiguration(devDestBucketName);
+  console.log("Setting configuration for develop stage");
+  let menuTemplateFileName = "src/templates/menu2html.develop.hbs";  
+  module.exports.configuration = makeConfiguration(devDestBucketName, menuTemplateFileName);
 } else {
   throw new Error("configuration.js: process.env.stage not set as expected. Found: " + process.env.stage);
 }
   
-function makeConfiguration(aBucketName) {
+function makeConfiguration(aBucketName, aMenuTemplateFileName) {
   return {
     s3BucketPublishDest: aBucketName,
-    menuTemplateRelativeFilename: "src/templates/menu2html.hbs",
+    menuTemplateRelativeFilename: aMenuTemplateFileName,
     menuRendered: {
       localFilename: "/tmp/index.html",
       s3Url: "s3://" + aBucketName + "/index.html"

@@ -1,0 +1,150 @@
+<html>
+  <head>
+    <title>Chuck's CD Live Tap Lists</title>
+
+    <link rel="stylesheet" type="text/css" href="menu_style.develop.css"/>
+
+    <!-- Toottip stuff -->
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="tipped.js"></script>
+    <link rel="stylesheet" type="text/css" href="tipped.css"/>
+
+    <script>
+      function refresh() {
+        window.location.reload(true);
+        }
+    
+      var aMinute = 60000;
+      setTimeout(refresh, 5 * aMinute);
+    </script>
+    
+    <script type="text/javascript">
+      $(document).ready(function() {
+        Tipped.create('.simple-tooltip', {skin: 'only default unless pay', position: 'topright' });
+      });
+    </script>
+    
+    <style>
+      .uncertainBooziness{
+        color: silver;
+        }
+  
+      .noGrowlersAvailable {
+        color: silver;
+        }
+  
+      .oddPricing {
+        color: #d8150f;
+        }
+      
+      table {
+        border-collapse: collapse;
+        width:100%;
+        }
+  
+      th, td {
+        padding: 7px 14px 7px 14px;
+        }
+  
+      /*    table.sortable thead { */
+      #tableHead {
+        background-color:#a0a0a0;
+        color:#101010;
+        font-weight: bold;
+        cursor: default;
+        }
+  
+      table.sortable tr:nth-child(odd) td{
+        background: #f5f5f5;
+        /* pre-2018-02 background: #202020; */
+        }
+      table.sortable tr:nth-child(even) td{
+        background: #E0E0E0;
+        /* pre-2018-02 background: #404040; */
+        }
+  
+      p {
+        padding: 5px 10px 5px 10px;
+        }
+      
+      body {
+        margin:0px;
+        padding:0px;
+        font-family: sans-serif;
+        }
+    </style>
+    <script src="sorttable.js"></script>
+  </head>
+  <body>
+    <h2 class='pageTitle' style='padding: 25px 10px 10px 20px'>Chuck's CD Live Taplist</h2>
+    <table class='sortable'>
+      <thead id='tableHead'>
+        <tr>
+	  <th align='right' class='simple-tooltip' title='Tap #'>#</th>
+          <th align='left'>Brewer</th>
+	  <th align='left'>Brew</th>
+          <th align='left'>Type</th>
+	  <th align='right'>Pint</th>
+	  <th align='right'>Growler</th>
+	  <th align='right' class='simple-tooltip' title='Alcohol By Volume'>ABV</th>
+	  <th align='left' class='simple-tooltip' title='Alcohol By Dollar (ABV/$Pint)'>AB$</th>
+	  <th class='simple-tooltip' title='Time keg was tapped'>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+      {{#each this}}
+        <tr>
+	  <td align='right'>{{id}}</td>
+          <td align='left'>{{brewery}}</td>
+	  <td align='left'>{{beerName}}</td>
+	  <td align='left' class='{{beerType}}'>{{beerType}}</td>
+	  
+          {{#if doublePricing}}
+            <td align='right' class='oddPricing simple-tooltip' title='Probably a half pint, 8 oz.'>${{pintPrice}}</td>
+          {{else}}
+            <td align='right'>${{pintPrice}}</td>                        
+          {{/if}}
+	  
+          {{#if noGrowlersAvailable}}
+            <td align='right' class='noGrowlersAvailable simple-tooltip' title='Limited supply. No growlers please.'>${{growlerPrice}}</td>            
+          {{else}}
+            <td align='right'>${{growlerPrice}}</td>                        
+          {{/if}}
+
+          <td align='right'>{{alcoolVolume}}%</td>
+
+          {{#if uncertainAlcoolPerDollar}}
+            <td align='right' class='uncertainBooziness simple-tooltip' style='text-align:left'
+	        title='This could be wrong. Cannot be sure without growler pricing.'>{{onceOfAlcoolPerDollar}}</td>
+          {{else}}
+            <td aligh='right'>{{onceOfAlcoolPerDollar}}</td>
+          {{/if}}
+
+
+          <td align='right'>{{tapDateTime}}</td>
+
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+
+    <!--
+    <p>
+      <span style='font-weight:bold'>Tech details:</span>
+      on the server, this page is rebuilt every minute but once loaded in the
+      browser this page self-refreshes every five minutes.
+      It could self-refresh every minute but during refresh any
+      column sorting is reset and that can get annoying while reading.
+    </p>
+    <p>
+      Of course, you can manually reload at any time.
+      Or for the very latest, just visit <a href='http://www.chuckscd.com/'>the real Chuck's CD website</a>,
+      from which the data on this page is screen scraped.
+    </p>
+    -->
+    
+    <p>
+      This page should have been created no more than 5 minutes ago. This page was create: {{nowDateTime}}
+    </p>
+  </body>
+</html>

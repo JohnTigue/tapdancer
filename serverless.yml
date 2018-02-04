@@ -46,6 +46,7 @@ functions:
       # but upon real deploy, AWS doesn't like this: schedule: cron(* * * * * *)
       # originally, but serverless-offline-scheduler wants cron syntax
       - schedule: rate(1 minute)
+      - http: GET refresh # to manually cause a refresh
   sanityChecker:
     handler: src/lambdas/sanityChecker/SanityChecker.checkSanity
     events:

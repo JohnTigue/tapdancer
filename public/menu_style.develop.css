@@ -1,0 +1,28 @@
+body {
+    background-color: #f5f5f5;
+    color: #101010 ;
+}
+
+.pageTitle {
+    color: #101010;
+    /* pre-2018-02 color: #C0C0C0; */
+}
+
+
+
+
+.IPA {
+    color: #02cc02;
+}
+
+.Sour {
+    color: #9b009b;
+}
+
+.Cider {
+    color: #a8a800;
+}
+
+.Stout {
+    color: #a0522d;
+}
