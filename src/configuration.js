@@ -1,37 +1,39 @@
 /* Want to have a different set of values per stage.
-   So severless.yml sets env of stage and this here decides based 
-   on process.ENV.stage which one of these to export
+ * So severless.yml sets env of stage and this here decides based 
+ * on process.env.stage which settings configuration to export.
+ * 
+ * This is setup for two stages: "production" and "develop"
+ *
+ * Buckets:
+ *   production: s3://chuckstaplist.com
+ *   develop:    s3://chuckstaplist-dev
  */
 
-if(process.ENV.stage === "production") {
-  const prodDestBucketName = "chuckstaplist.com";
+const devDestBucketName = "chuckstaplist-dev";
+const prodDestBucketName = "chuckstaplist.com";
 
-  const productionConfiguration = {
-    s3BucketPublishDest: prodDestBucketName,
-    fileOpts: {
-      menuTemplateFilename: "templates/menu2html.hbs",
-      menuRenderedFilename: "/tmp/index.html",
-      menuRenderedPutToS3: "s3://" + prodDestBucketName + "/index.html", // The main artifact output URL i.e. where what was made goes when done
-      beersAsJsonFilename: "/tmp/beers.json",
-      beersAsJsonInS3: "s3://" + prodDestBucketName + "/beers.json"
-    }
-  };
-  module.exports.configuration = productionConfiguration;
-} else if(process.ENV.stage === "develop") {
-  const devDestBucketName = "chuckstaplist.dev";
-
-  const developConfiguration = {
-    s3BucketPublishDest: devDestBucketName,
-    fileOpts: {
-      menuTemplateFilename: "templates/menu2html.hbs",
-      menuRenderedFilename: "/tmp/index.html",
-      menuRenderedPutToS3: "s3://" + devDestBucketName + "/index.html", 
-      beersAsJsonFilename: "/tmp/beers.json",
-      beersAsJsonInS3: "s3://" + devDestBucketName + "/beers.json"
-    }
-  };
-  module.exports.configuration = developmentConfiguration;
+if(process.env.stage === "production") {
+  console.log("Setting configuration for production stage")
+  module.exports.configuration = makeConfiguration(prodDestBucketName);
+} else if(process.env.stage === "develop") {
+  console.log("Setting configuration for develop stage")
+  module.exports.configuration = makeConfiguration(devDestBucketName);
 } else {
-  throw new Error("configuration.js: process.ENV.stage not set as expected.");
+  throw new Error("configuration.js: process.env.stage not set as expected. Found: " + process.env.stage);
 }
   
+function makeConfiguration(aBucketName) {
+  return {
+    s3BucketPublishDest: aBucketName,
+    menuTemplateRelativeFilename: "src/templates/menu2html.hbs",
+    menuRendered: {
+      localFilename: "/tmp/index.html",
+      s3Url: "s3://" + aBucketName + "/index.html"
+    },
+    beersJson: {
+      localFilename: "/tmp/beers.json",
+      s3Url: "s3://" + aBucketName + "/beers.json"
+    }
+  };
+
+}

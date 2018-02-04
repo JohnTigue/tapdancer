@@ -1,27 +1,21 @@
-/* This file screen scrapes chucks.com beer menu from HTML to JSON (and
- * the JSON is persisted to S3 and made publicly available).  It also
- * generates a very simple (but sortable) HTML page.
- *
+/* This code screen scrapes chucks.com beer menu from HTML to JSON
+ * (and the JSON is persisted to S3 and made publicly available).  It
+ * also generates a very simple (but sortable) HTML page which is made
+ * available on the web.
+ * 
+ * The artifact destination depends on the stage, see
+ * src/configuration.js for details
+ * 
  * License: MIT
  * Author: John Tigue (john@tigue.com)
  */
 (() => {
   "use strict";
+  // TODO: turn this into modern JS and webpack it for deploy to Lambda
+
+  const config = require("../../configuration").configuration;
 
   let globalCallback = null;
-  
-  const config = require("../../configuration");
-
-  /* TODO: kill
-  let s3BucketPublishDest = "chuckstaplist.com";
-  let fileOpts = {
-    menuTemplateFilename: "templates/menu2html.hbs",
-    menuRenderedFilename: "/tmp/index.html",
-    menuRenderedPutToS3: "s3://" + s3BucketPublishDest + "/index.html", // The main artifact output URL i.e. where what was made goes when done
-    beersAsJsonFilename: "/tmp/beers.json",
-    beersAsJsonInS3: "s3://" + s3BucketPublishDest + "/beers.json"
-  };
-   */
 
   const Promise = require("bluebird");
 
@@ -37,29 +31,8 @@
 
   const $ = cheerio.load(""); //TODO: is this needed?
 
-  /* Not doing FTP any more, just S3.putObject()
-  // works on osx but not lambda
-  //const PromiseFtp = require('promise-ftp');
-  const JSFtp = require("jsftp");
-
-  // not in lambda sadly: let ftp = new PromiseFtp();
-  let ftpOpts = {
-    host: "tigue.com",
-    user: "tigue",
-    password: "43cts21",
-    destFilename: "/public_html/chuckscd/index.html"
-  };
-
-  let Ftp = new JSFtp({
-    host: ftpOpts.host,
-    user: ftpOpts.user,
-    pass: ftpOpts.password,
-    port: 21
-  });
-   */
-
   let Ftp = null;
-  
+
   // https://github.com/nknapp/promised-handlebars
   global.Promise = Promise;
   let promisedHandlebars = require("promised-handlebars");
@@ -69,10 +42,10 @@
     let anId = parseInt($(anEl).find(".draft_tap").text());
     //console.log('tap# ' + anId);
 
-    let aBrewer = $(anEl).find(".draft_brewery").text();  
+    let aBrewer = $(anEl).find(".draft_brewery").text();
     //console.log('brewer:' + aBrewer);
-    
-    let aBeerName =  $(anEl).find(".draft_name").text();  
+
+    let aBeerName =  $(anEl).find(".draft_name").text();
     //console.log('brew:' + aBeerName);
 
     let aGrowlerPrice = 0;
@@ -125,7 +98,7 @@
       alcoolVolume = 0.0;
     }
     console.info($(anEl).find(".draft_abv").text() + " => " + alcoolVolume);
-      
+
     let onceOfAlcoolPerDollar = 16 * (alcoolVolume / 100) / pintPrice;
     // console.error( onceOfAlcoolPerDollar);
 
@@ -214,28 +187,15 @@
 
         console.log('# beers found in html = ' + leftBeerEls.get().length);
         let beers = leftBeerEls.get();
-
-        /*
-         This is from the pre-2017-09 menu which had two tables left and right
-        let rightBeerEls = mainPage("#draft_right")
-          .find("li")
-          .not(".header")
-          .map((i, el) => {
-            return extractBeerInfo(el);
-          });
-        //console.log('left=' + leftBeerEls.get().length + ' right=' + rightBeerEls.get().length);
-        let beers = leftBeerEls.get().concat(rightBeerEls.get());
-         */
-        
         return beers;
       })
       .then(currentBeers => {
         // read beers.json from S3, find unknown beers and add timestamp, write to S3
-        let anUrl = fileOpts.beersAsJsonInS3;
+        let anUrl = config.beersJson.s3Url;
 
         if (!s3urls.valid(anUrl)) {
-          console.log("bad S3 URL: " + anUrl);
-          return Promise.reject("bad S3 URL: " + anUrl);
+          console.log("bad S3 URL for beersJson: " + anUrl);
+          return Promise.reject("bad S3 URL for beersJson: " + anUrl);
         } else {
           let s3Deets = s3urls.fromUrl(anUrl);
           //console.log('Key:' + s3Deets.Key + ' Bucket:' + s3Deets.Bucket);
@@ -289,7 +249,7 @@
         // TODO: Great. But why is menuRenderedString what is returned?
         console.log("about to Handlebar " + currentBeers.length + " beers");
         return fs
-          .readFileAsync(fileOpts.menuTemplateFilename, "utf8")
+          .readFileAsync(config.menuTemplateRelativeFilename, "utf8")
           .then(menuTemplateString => {
             let menuTemplate = Handlebars.compile(menuTemplateString);
 
@@ -302,7 +262,7 @@
               //console.log(menuRenderedString);
               return fs
                 .writeFileAsync(
-                  fileOpts.menuRenderedFilename,
+                  config.menuRendered.localFilename,
                   menuRenderedString,
                   "utf8"
                 )
@@ -313,7 +273,7 @@
                 .catch(err => {
                   console.error(
                     "ERROR fs.writeFileAsync(" +
-                      fileOpts.menuRenderedFilename +
+                      config.menuRendered.localFilename +
                       "): " +
                       err
                   );
@@ -328,7 +288,7 @@
       })
       .then(menuRenderedString => {
         // S3.putObject() the menuRenderedString
-        let putDestS3Url = fileOpts.menuRenderedPutToS3;
+        let putDestS3Url = config.menuRendered.s3Url;
         if (!s3urls.valid(putDestS3Url)) {
           // not sure how we could ever get to this case but, hey why not check anyway
           console.error("bad S3 URL: " + putDestS3Url);
@@ -338,7 +298,6 @@
           //console.log('Key:' + s3Deets.Key + ' Bucket:' + s3Deets.Bucket);
           let menuS3DestParams = { Bucket: s3Deets.Bucket, Key: s3Deets.Key };
 
-        
           let putParams = {
             Body: menuRenderedString,
             Bucket: s3Deets.Bucket,
@@ -350,7 +309,7 @@
           return putMenuHtml
           .then(() => {
             console.log(
-              "putObject(menu as " + s3Deets.Key + ") to S3 worked." 
+              "putObject(menu as " + s3Deets.Key + ") to S3 worked."
             );
             return "Who cares? Put is done.";
           })
@@ -359,50 +318,6 @@
             return Promise.reject(err);
           });
         }
-        
-        /* v0.1.x sent fileOpts.menuTemplateFilename to tigue.com/chucks via FTP
-        // FTP put the rendered menu page to tigue.com/chuckscd
-        console.log("mrs.length:" + menuRenderedString.length);
-        return fs
-          .readFileAsync(fileOpts.menuTemplateFilename, "utf8")
-          .then(menuTemplateString => {
-            return new Promise(function(resolve, reject) {
-              console.log(
-                "About to: Ftp.put(" +
-                  fileOpts.menuRenderedFilename +
-                  ", " +
-                  ftpOpts.destFilename +
-                  ")"
-              );
-              Ftp.put(
-                fileOpts.menuRenderedFilename,
-                ftpOpts.destFilename,
-                hadError => {
-                  if (hadError) {
-                    console.log("ftp put errored:" + hadError);
-                    reject(hadError);
-                  }
-                  console.log("ftp put ok");
-                  resolve();
-                }
-              );
-            })
-              .catch(err => {
-                console.log(err);
-                return Promise.reject(err);
-              })
-              .then(() => {
-                // can't destroy() it durning this round w/o errors
-                setTimeout(function() {
-                  if (Ftp) {
-                    Ftp.destroy();
-                    Ftp = null;
-                  }
-                }, 50);
-              });
-          });
-         */
-        
       })
       .catch(err => {
         console.log("main webFetch() catch :" + err);
@@ -418,72 +333,21 @@
       });
   };
 
-  exports.freshenMenu = function(event, context, callback) {
+  exports.pollForUpdates = function(event, context, callback) {
     globalCallback = callback;
+
+    console.log(
+      "pollForUpdates invoked at " +
+        moment().tz("America/Los_Angeles").format("M/D[@]HH[:]mm")
+    );
+
+    //in serverless-offline, callback() does not seem to end execution, so explicitly return
+    //callback();    
+    //return;
+
     doYourThing().then(() => {
       console.log("done");
       callback();
     });
-
-    
   };
-
-  /*
-let testS3Read = () => {
-  let anUrl = fileOpts.beersAsJsonInS3;
-  if(!s3urls.valid(anUrl)) {
-      console.log('bad URL: ' + anUrl);
-    } else {
-      let s3Deets = s3urls.fromUrl(anUrl);
-      console.log('Key:' + s3Deets.Key + ' Bucket:' + s3Deets.Bucket);
-      let beersJsonParams = {Bucket: s3Deets.Bucket, Key: s3Deets.Key};
-      var getBeersDotJson = s3.getObject(beersJsonParams).promise();
-      getBeersDotJson
-        .then(data => {
-          console.log(Object.keys(data));
-          return data.Body.toString(); 
-          })
-        .then(beersAsJson => {
-          let beers = JSON.parse(beersAsJson);
-          console.log('beers.length=' + beers.length);
-          beersJsonParams.Body = JSON.stringify(beers);
-          var putBeersDotJson = s3.putObject(beersJsonParams).promise();
-          putBeersDotJson
-            .then(() => {
-              console.log('put worked');
-            })
-            .catch(err => {
-              console.log(err);
-              return Promise.reject(err);
-            });
-          })
-        .catch(err => {
-          console.log(err);
-          return Promise.reject(err);
-          })
-        .then(() => {
-          setTimeout(function() {
-            if (Ftp) {
-               Ftp.destroy();
-               Ftp = null;
-               }
-            }, 50);   
-          });
-      };
-  };
-testS3Read();
- */
-
-  console.log(
-    "run invoked at " +
-      moment().tz("America/Los_Angeles").format("M/D[@]HH[:]mm")
-  );
-  // JFT-TODO: so then the init load of this code into lambda will run freshneMenu twice, no?
-
-  // this is for invoking freshenMenu from localhost where it's triggered by, say, cron
-//  exports.freshenMenu({}, {}, () =>
-//    console.log("done mimicking Lambad invoke")
-//  );
-
-
 })();

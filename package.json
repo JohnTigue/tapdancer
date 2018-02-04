@@ -24,6 +24,7 @@
     "s3urls": "^1.5.2"
   },
   "devDependencies": {
-    "serverless-offline": "^3.16.0"
+    "serverless-offline": "^3.16.0",
+    "serverless-offline-scheduler": "^0.3.3"
   }
 }
