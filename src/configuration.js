@@ -9,6 +9,7 @@
  *   develop:    s3://chuckstaplist-dev
  */
 
+// TODO: these two should move to serverless.yml, and then get used here as process.env.devDestBucketName, etc.
 const devDestBucketName = "chuckstaplist-dev";
 const prodDestBucketName = "chuckstaplist.com";
 
@@ -23,7 +24,8 @@ if(process.env.stage === "production") {
 } else {
   throw new Error("configuration.js: process.env.stage not set as expected. Found: " + process.env.stage);
 }
-  
+
+// TODO: no, the template shouldn't change; simply same file, different git branches
 function makeConfiguration(aBucketName, aMenuTemplateFileName) {
   return {
     s3BucketPublishDest: aBucketName,
