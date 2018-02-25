@@ -97,7 +97,7 @@
       body, html {
         height: 100%;
       }
-      .bg { 
+      .taplist-table { 
         /* The image used */
         background-image: /*rgba(128, 0, 0, 0.9), */ url("background.png");
         /* Center and scale the image nicely */
@@ -106,20 +106,28 @@
         background-size: contain;
         background-attachment: scroll;
       
-        /* opacity: 0.1; */
-        /* -webkit-filter: grayscale(100%) opacity(100%);  Chrome, Safari, Opera */
-        /* filter: grayscale(100%) */ alpha(opacity=50); */
-
-        /* Full height 
-        height: 100%; */      
-      }
-      notBg {
-        -webkit-filter: /* opacity(100%);  Chrome, Safari, Opera */
-        /* filter: grayscale(100%) */ alpha(opacity=50); */
-      }
-      
     </style>
     <script src="sorttable.js"></script>
+    <style>
+      thead {
+        cursor: default;
+        }
+
+      .flashAFew {
+        animation-duration: 1s;
+        animation-direction: alternate;
+        animation-name: flashAFew;
+        animation-iteration-count: 10;
+        animation-timing-function: ease-in-out;
+        }
+      @keyframes flashAFew {
+        from {
+          color: black;
+          }
+        to {
+          color: gray;
+        }
+    </style>
   </head>
   <body>
 
@@ -152,34 +160,35 @@
 
     
     <!-- for the full page BG image -->
-   <div class="bg">  
+   <!-- <div class="bg">  -->
 
     
-    <table class="notBg table table-striped table-hover sortable">
+    <table class="taplist-table table table-striped table-hover sortable">
       <caption style="display: none" >Taplist</caption>
-      <thead NOT_id='tableHead' class="thead-light">
+      <thead NOT_id="tableHead" class="thead-light">
         <tr>
-	  <th scope="col" class="text-left simple-tooltip d-none d-md-table-cell" title='Tap #'>#</th>
-          <th scope="col" >Brewer</th>
-	  <th scope="col" >Brew</th>
-          <th scope="col" >Type</th>
-	  <th scope="col" class="text-right">Pint</th>
-	  <th scope="col" class="text-right d-none d-md-table-cell">Growler</th>
-	  <th scope="col" class="text-right simple-tooltip d-none d-md-table-cell" title='Alcohol By Volume'>ABV</th>
-	  <th scope="col" class="simple-tooltip d-none d-md-table-cell" title='Alcohol By Dollar (ABV/$Pint)'>AB$</th>
-	  <th scope="col" class="text-right simple-tooltip d-none d-md-table-cell" title='Time keg was tapped'>Date</th>
+	  <th scope="col" class="flashAFew text-right simple-tooltip d-none d-md-table-cell" title='Tap #'>#</th>
+          <th scope="col" class="flashAFew">Brewery</th>
+	  <th scope="col" class="flashAFew">Brew</th>
+          <th scope="col" class="flashAFew">Type</th>
+	  <th scope="col" class="flashAFew text-right">Pint</th>
+	  <th scope="col" class="flashAFew text-right d-none d-md-table-cell">Growler</th>
+	  <th scope="col" class="flashAFew text-right d-none d-md-table-cell">Origin</th>
+	  <th scope="col" class="flashAFew text-right simple-tooltip d-none d-md-table-cell" title='Alcohol By Volume'>ABV</th>
+	  <!-- <th scope="col" class="simple-tooltip d-none d-md-table-cell" title='Alcohol By Dollar (ABV/$Pint)'>AB$</th> -->
+	  <th scope="col" class="flashAFew simple-tooltip d-none d-md-table-cell" title='Time keg was tapped'>Date</th>
         </tr>
       </thead>
       <tbody>
       {{#each this}}
         <tr>
-	  <th scope="row" align='right' class="d-none d-md-table-cell">{{id}}</th>
+	  <th scope="row" class="text-right d-none d-md-table-cell">{{id}}</th>
           <td align='left'>{{brewery}}</td>
 	  <td align='left'>{{beerName}}</td>
 	  <td align='left' class='{{beerType}}'>{{beerType}}</td>
 	  
-          {{#if doublePricing}}
-            <td align='right' class="oddPricing simple-tooltip" title="Probably a half pint, 8 oz.">${{pintPrice}}</td>
+          {{#if isPintPriceActuallyFor8oz}}
+            <td align='right' NOT____class="oddPricing simple-tooltip" title="Probably a half pint, 8 oz."><span class="oddPricing">8oz</span> ${{pintPrice}}</td>
           {{else}}
             <td align='right'>${{pintPrice}}</td>                        
           {{/if}}
@@ -190,23 +199,26 @@
             <td align='right' class="d-none d-md-table-cell">${{growlerPrice}}</td>                        
           {{/if}}
 
+          <td align='right' class="d-none d-md-table-cell">{{origin}}</td>
+
           <td align='right' class="d-none d-md-table-cell">{{alcoolVolume}}%</td>
 
+          <!--
           {{#if uncertainAlcoolPerDollar}}
             <td align='right' class="uncertainBooziness simple-tooltip d-none d-md-table-cell" style='text-align:left'
 	        title='This could be wrong. Cannot be sure without growler pricing.'>{{onceOfAlcoolPerDollar}}</td>
           {{else}}
             <td aligh='right' class="d-none d-md-table-cell">{{onceOfAlcoolPerDollar}}</td>
           {{/if}}
-
-
-          <td align='right' class="d-none d-md-table-cell">{{tapDateTime}}</td>
+            -->
+            
+          <td align='left' class="d-none d-md-table-cell">{{formatDate tapDateTime}}</td>
 
         </tr>
       {{/each}}
       </tbody>
     </table>
-   </div>
+   <!-- </div> -->
    
     <!--
     <p>
@@ -225,7 +237,7 @@
 
       <p>
         This page in recreated every five minutes. This page was create: {{nowDateTime}}
-        v1.0.2 <!-- TODO: v%REACT_APP_VERSION% --> <a href="https://github.com/JohnTigue/brew_picker/issues/new">Suggestions?</a>
+        v1.3.2 <!-- TODO: v%REACT_APP_VERSION% --> <a href="https://github.com/JohnTigue/brew_picker/issues/new">Suggestions?</a>
       </p>
   </body>
 </html>

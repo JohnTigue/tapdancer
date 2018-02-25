@@ -15,7 +15,7 @@
 
   const config = require("../../configuration").configuration;
 
-  let globalCallback = null;
+  //let globalCallback = null;
 
   const Promise = require("bluebird");
 
@@ -37,7 +37,11 @@
   global.Promise = Promise;
   let promisedHandlebars = require("promised-handlebars");
   let Handlebars = promisedHandlebars(require("handlebars"));
-
+  Handlebars.registerHelper("formatDate", function(context) {
+    return moment(context).tz(config.taps.location.timeZoneNameForMomentJs).format("M/DD hha");
+  });
+  
+  
   let extractBeerInfo = anEl => {
     let anId = parseInt($(anEl).find(".draft_tap").text());
     //console.log('tap# ' + anId);
@@ -82,23 +86,40 @@
       aBeerType = "Stout";
     }
 
-    // if a growler is 6x a "pint" then the pint is probably 8oz
-    let isProbably8oz = Math.ceil(6 * pintPrice) == aGrowlerPrice; // they round up the price of (3 X pint)
-    //console.log( Math.ceil(6 * pintPrice) + ' == ' +  aGrowlerPrice);
-    //if(isProbably8oz) console.log('^^^^^^^^^^^');
+    /* Two features together show if a tapOffering is actually for (default) 16oz pint, or 8oz for special beers
+     *   1. Price of growler is way more than 3x pint (normally growler is 3:1 pint, special case will be close to 6:1)
+     *   2. Name actually tagged with **8oz** or ***8oz***
+     * So, could just go by "*8oz* in name", alone without looking for pricing oddness
+     *
+     * Also note that Issue #15 found that the special case pricing math is looser than strict 6x pricing 
+     * Examples: $6.50/$38.00, $9.00/$56.00, and $7.00/$41.00
+     */
+    let isPintPriceActuallyFor8oz = false;
+    // old way, using math detection: if(Math.ceil(5 * pintPrice) < aGrowlerPrice); // they round up the price of (3 X pint) so 5x is a good threshold
 
-    // highlight odd pricing of growler but not if pint is probably an 8oz
-    let oddPricing = false;
-    if (!isProbably8oz) {
-      oddPricing = Math.ceil(3 * pintPrice) !== aGrowlerPrice;
+    let shortyRegexp = /(\*+8oz\*+)/;
+    if(shortyRegexp.test(aBeerName)){
+      isPintPriceActuallyFor8oz = true;
+      // remove *8oz* from name
+      aBeerName = aBeerName.replace(shortyRegexp, "");
     }
+
+    // TODO: kill old code
+    // highlight odd pricing of growler but not if pint is probably an 8oz
+    //let oddPricing = false;
+    //if (!isProbably8oz) {
+    //  oddPricing = Math.ceil(3 * pintPrice) !== aGrowlerPrice;
+    //}
 
     let alcoolVolume = parseFloat($(anEl).find(".draft_abv").text());
     if(isNaN(alcoolVolume)){
       alcoolVolume = 0.0;
     }
-    console.info($(anEl).find(".draft_abv").text() + " => " + alcoolVolume);
+    //console.info($(anEl).find(".draft_abv").text() + " => " + alcoolVolume);
 
+    let aBeerOrigin = $(anEl).find(".draft_origin").text();
+    //console.info(aBeerOrigin);
+    
     let onceOfAlcoolPerDollar = 16 * (alcoolVolume / 100) / pintPrice;
     // console.error( onceOfAlcoolPerDollar);
 
@@ -108,10 +129,8 @@
     //console.log(aBeerName + ' g=' + aGrowlerPrice);
     if (aGrowlerPrice == 0) {
       uncertainAlcoolPerDollar = true;
-      //console.log('   0checking oddPricing:' + oddPricing);
     } else {
-      //console.log('    checking oddPricing:' + oddPricing);
-      if (isProbably8oz) {
+      if (isPintPriceActuallyFor8oz) {
         //console.log('    ...Caught it');
         // then we have both growler and pint pricing and its odd which means we have caclulated onceOfAlcoolPerDollar for 16oz when it needs to be for 8
         onceOfAlcoolPerDollar = onceOfAlcoolPerDollar / 2;
@@ -119,19 +138,24 @@
     }
 
     return {
-      id: anId,
+      id: anId, // tap #
       brewery: aBrewer,
       beerName: aBeerName,
+      origin: aBeerOrigin,
       beerType: aBeerType,
+      alcoolVolume: alcoolVolume.toFixed(1),
+
       pintPrice: pintPrice.toFixed(2),
+      isPintPriceActuallyFor8oz: isPintPriceActuallyFor8oz,
       growlerPrice: aGrowlerPrice.toFixed(2),
       noGrowlersAvailable: noGrowlersAvailable,
-      oddPricing: oddPricing,
-      doublePricing: isProbably8oz,
-      growlerToPintRatio: (aGrowlerPrice / pintPrice).toFixed(1), // TODO: I think this is not used
-      alcoolVolume: alcoolVolume.toFixed(1),
+
       onceOfAlcoolPerDollar: onceOfAlcoolPerDollar.toFixed(2),
       uncertainAlcoolPerDollar: uncertainAlcoolPerDollar
+
+      // TODO: cull?
+      //oddPricing: oddPricing, // TODO: not used, so kill
+      //growlerToPintRatio: (aGrowlerPrice / pintPrice).toFixed(1) // TODO: I think this is not used
     };
   };
 
@@ -140,31 +164,37 @@
 
     currentBeers.forEach(aCurrentBeer => {
       let matchingPreviousBeer = previousBeers.find(aPreviousBeer => {
-        // brew + brewer can be used as a unique key
+        // brewery-plus-beerName can be used as a unique key to compare for
         return (
           aCurrentBeer.beerName === aPreviousBeer.beerName &&
           aCurrentBeer.brewery === aPreviousBeer.brewery
         );
       });
-      if (matchingPreviousBeer) {
-        //console.log( 'found old ' + matchingPreviousBeer.beerName );
-        if (matchingPreviousBeer.tapDateTime) {
-          aCurrentBeer.tapDateTime = matchingPreviousBeer.tapDateTime;
-        } else {
-          aCurrentBeer.tapDateTime = new Date().toISOString();
-        }
+      if(matchingPreviousBeer != null) {
         oldBeerCount++;
+      }
+      if (matchingPreviousBeer && matchingPreviousBeer.tapDateTime != null) {
+        // TODO: Kill, eventually when all old format instances are gone
+        // Could be the old format, like:
+        //   aCurrentBeer.tapDateTime = "2/18@14h"
+        let maybeOldFormatMoment = moment(matchingPreviousBeer.tapDateTime, "M/DD[@]HH[h]");
+        //console.log( "..is valid: " + maybeOldFormatMoment.isValid() + ": " + maybeOldFormatMoment.format());
+        if(maybeOldFormatMoment.isValid()) {
+          // ...use old but reformat
+          aCurrentBeer.tapDateTime = maybeOldFormatMoment.format(); // TODO: what is right format? And string? or other?
+        } else {
+          // ...assume is new format
+          aCurrentBeer.tapDateTime = matchingPreviousBeer.tapDateTime;
+        }
       } else {
-        console.log("found NEW " + aCurrentBeer.beerName);
-        aCurrentBeer.tapDateTime = moment()
-          .tz("America/Los_Angeles")
-          .format("M/DD[@]HH[h]");
+        console.log("Found new beer: " + aCurrentBeer.beerName);
+        aCurrentBeer.tapDateTime = moment().format();
         //console.log('NEW beer @ ' + aCurrentBeer.tapDateTime);
       }
     });
     // then for each currentBeer, get it's time stamp from its corresponding previousBeer
     // if there is no corresponding previousBeer then generate new timeStamp
-    console.log("oldBeerCount=" + oldBeerCount);
+    console.log("Checked timestamps of current and previous lists... known beers: " + oldBeerCount);
 
     return currentBeers;
   };
@@ -185,7 +215,7 @@
             return extractBeerInfo(el);
           });
 
-        console.log('# beers found in html = ' + leftBeerEls.get().length);
+        console.log('Polling chucks website... Fetched current draft html. Beers found in html = ' + leftBeerEls.get().length);
         let beers = leftBeerEls.get();
         return beers;
       })
@@ -203,14 +233,14 @@
           var getBeersDotJson = s3.getObject(beersJsonParams).promise();
           return getBeersDotJson
             .then(data => {
-              console.log("getBeersDotJson seems to have worked:");
+              console.log("Fetching previous taplist... getBeersDotJson seems to have worked.");
               //console.log(data.Body.toString());
               return data.Body.toString();
             })
             .then(previousBeersDotJsonContents => {
               let previousBeers = JSON.parse(previousBeersDotJsonContents);
               console.log(
-                'JSON.parse("beers.json") ok: previousBeers.length = ' +
+                'JSON.parse(beers.json\'s contents) went ok. previousBeers.length = ' +
                   previousBeers.length
               );
               currentBeers = timestampUnknownBeers(previousBeers, currentBeers);
@@ -222,14 +252,14 @@
                 ContentType: "application/json",
                 ACL: "public-read"
               };
-              console.log("About to put beersAsJson");
+              console.log("Now to S3 put new beersAsJson...");
               var putBeersDotJson = s3.putObject(putParams).promise();
               return putBeersDotJson
                 .then(() => {
                   console.log(
-                    "put to S3 worked. returning " +
+                    "...put to S3 worked. Proceeding with " +
                       currentBeers.length +
-                      " beers"
+                      " beers to html render."
                   );
                   return currentBeers;
                 })
@@ -247,7 +277,7 @@
       .then(currentBeers => {
         // Read html template from FS, Handlebar that with currentBeers, write renderedMenuPage to FS,
         // TODO: Great. But why is menuRenderedString what is returned?
-        console.log("about to Handlebar " + currentBeers.length + " beers");
+        console.log("Next, Handlebars render " + currentBeers.length + " beers.");
         return fs
           .readFileAsync(config.menuTemplateRelativeFilename, "utf8")
           .then(menuTemplateString => {
@@ -255,7 +285,7 @@
 
             // this is used to timestamp the generated page
             currentBeers.nowDateTime = moment()
-              .tz("America/Los_Angeles")
+              .tz(config.taps.location.timeZoneNameForMomentJs)
               .format("M/D[@]HH[:]mm");
 
             return menuTemplate(currentBeers).then(menuRenderedString => {
@@ -267,7 +297,7 @@
                   "utf8"
                 )
                 .then(() => {
-                  console.log("write menuRenderedString to FS: ok");
+                  console.log("...write menuRenderedString to FS went ok.");
                   return menuRenderedString;
                 })
                 .catch(err => {
@@ -309,7 +339,7 @@
           return putMenuHtml
           .then(() => {
             console.log(
-              "putObject(menu as " + s3Deets.Key + ") to S3 worked."
+              "...putObject(menu as s3://" + s3Deets.Bucket + "/" + s3Deets.Key + ") to S3 worked."
             );
             return "Who cares? Put is done.";
           })
@@ -324,30 +354,64 @@
         return Promise.reject(err);
       })
       .then(() => {
+        /* TODO: kill, probably harmless cannot be helping.
         setTimeout(function() {
           if (Ftp) {
             Ftp.destroy();
             Ftp = null;
           }
         }, 50);
+        */
       });
   };
 
   exports.pollForUpdates = function(event, context, callback) {
-    globalCallback = callback;
+    //globalCallback = callback;
 
     console.log(
-      "pollForUpdates invoked at " +
-        moment().tz("America/Los_Angeles").format("M/D[@]HH[:]mm")
+      "----------------------\npollForUpdates() invoked at " +
+        moment().tz(config.taps.location.timeZoneNameForMomentJs).format("M/D[@]HH[:]mm")
     );
 
+    //console.log(event);
+    // Determine who invoked this genie.
+    // See https://docs.aws.amazon.com/lambda/latest/dg/eventsources.html#eventsources-api-gateway-request
+    if(event["detail-type"] == "Scheduled Event") {
+      console.log("Seemingly invoked via Scheduled Event");
+    } else if(event["requestContext"] != null) {
+      console.log("Seemingly invoked via API GW");
+    } else {
+      let error = new Error("Unknown invokation type");
+      console.error(error);
+      callback(true, error);
+    };
+    
     //in serverless-offline, callback() does not seem to end execution, so explicitly return
     //callback();    
     //return;
 
-    doYourThing().then(() => {
-      console.log("done");
-      callback(null, "success");
-    });
+    doYourThing()
+      .then(() => {
+        console.log("Invokation seems to have run to success.");
+        let responseHtml = `<html><body>Refresh succeeded.</body></html>`;
+        
+        // https://github.com/serverless/examples/tree/master/aws-node-serve-dynamic-html-via-http-endpoint
+        const response = {
+          statusCode: 200,
+          headers: {
+            'Content-Type': 'text/html',
+          },
+          body: responseHtml,
+        };
+
+        // TODO: maybe it's weird to return HTML to scheduled events but seemingly harmless
+        callback(null, response);
+      })
+      .catch(error => {
+        console.error("Main doYourThing() was caught.");
+        console.error(error);
+        callback(true, error);        
+      })
+    ;
   };
 })();

@@ -12,14 +12,13 @@
 // TODO: these two should move to serverless.yml, and then get used here as process.env.devDestBucketName, etc.
 const devDestBucketName = "chuckstaplist-dev";
 const prodDestBucketName = "chuckstaplist.com";
+const menuTemplateFileName = "src/templates/menu2html.hbs";
 
 if(process.env.stage === "production") {
   console.log("Setting configuration for production stage");
-  let menuTemplateFileName = "src/templates/menu2html.hbs";
   module.exports.configuration = makeConfiguration(prodDestBucketName, menuTemplateFileName);
 } else if(process.env.stage === "develop") {
   console.log("Setting configuration for develop stage");
-  let menuTemplateFileName = "src/templates/menu2html.develop.hbs";  
   module.exports.configuration = makeConfiguration(devDestBucketName, menuTemplateFileName);
 } else {
   throw new Error("configuration.js: process.env.stage not set as expected. Found: " + process.env.stage);
@@ -37,6 +36,9 @@ function makeConfiguration(aBucketName, aMenuTemplateFileName) {
     beersJson: {
       localFilename: "/tmp/beers.json",
       s3Url: "s3://" + aBucketName + "/beers.json"
+    },
+    taps: {
+      location: {timeZoneNameForMomentJs: "America/Los_Angeles"}
     }
   };
 
