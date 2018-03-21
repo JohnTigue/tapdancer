@@ -1,0 +1,85 @@
+<html>
+  <head>
+    <title>Google sheet embed test</title>
+    <style>
+      body {
+        background-color: black;
+        margin: 0px;
+        overflow: hidden;
+      }
+      NOT {
+      color: red;
+      height: 100%;
+        background-color: black;
+      }
+      
+      iframe {
+overflow:hidden;
+      width: 100%;
+      height: 100%; //44%;
+        background-color: black;
+        border: 0;
+        //transform: scale(2.0);
+        //transform-origin: 0 0;
+      }
+    </style>
+    <script>
+      function scaleAmountNeededToFit(el, margin = 0) {
+        const parentSize = {
+          width: el.parentElement.clientWidth - margin * 2,
+          height: el.parentElement.clientHeight - margin * 2
+      };
+
+      //https://stackoverflow.com/a/11744120/4669056
+      var w = window,
+    d = document,
+    e = d.documentElement,
+    g = d.getElementsByTagName('body')[0],
+    x = w.innerWidth || e.clientWidth || g.clientWidth,
+    y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+
+
+   // indow.screen.availWidth
+      
+   iFrameWidth  = 682; el.contentWindow.document.body.scrollWidth;
+    iFrameHeight = el.contentWindow.document.body.scrollHeight;
+
+      console.log(`iFrameWidth: ${iFrameWidth}`);
+      console.log(`iFrameHeight: ${iFrameHeight}`);
+      
+      
+        return Math.min(x / iFrameWidth);//, y / el.clientHeight);
+      }
+
+      function fitToWindow(element, margin) {
+        let scale = scaleAmountNeededToFit(element, margin);
+ console.log("Fitting:" + scale);
+        scale = scale;
+        element.style.transformOrigin = "0 0";
+        element.style.transform = `translate(${margin}px, ${margin}px) scale(${scale})`;
+      }
+
+      function main() {
+        const margin = 0;
+        requestAnimationFrame(function fitToParentOnResize() {
+          fitToWindow(document.getElementById('taplistContainer'), margin);
+        });
+      }
+      window.addEventListener("DOMContentLoaded", main);
+      window.addEventListener("resize", main);
+    </script>
+  </head>
+  <body>
+    <div width="100%">
+
+      <!--
+          <iframe id="taplistContainer"
+                  src="https://docs.google.com/spreadsheets/d/1HpNhZCrsrmkkOrYATT8sqvL1MgscMHP8Li_moJEHGgw/preview?pli=1"
+                  >
+          </iframe>
+          -->
+      
+
+      <iframe id="taplistContainer" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTj7-ofhijjgNkkAJl6MRhHpKxwPwM5W-NmX9mWVJ1KpsFmRtFSTOWndcfAzEXHJoCe9Qg-6TzH11ln/pubhtml?gid=634347005&amp;single=true&amp;widget=true&amp;headers=false&amp;chrome=false" ></iframe>
+</div>
+</body></html>

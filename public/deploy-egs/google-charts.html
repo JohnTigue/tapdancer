@@ -1,0 +1,161 @@
+<html>
+  <head>
+    <title>Demo Taplist</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart','table']});
+      google.charts.setOnLoadCallback(drawTaplist);
+
+      var queryString  = encodeURIComponent("select B, C, D, E, F, G, H where A = '☑'");// 
+      var sourceGoogleSheetUrl = "https://docs.google.com/spreadsheets/d/1HpNhZCrsrmkkOrYATT8sqvL1MgscMHP8Li_moJEHGgw/gviz/tq?gid=634347005&headers=1&tq=" + queryString;
+
+      function drawTaplist() {
+        var query = new google.visualization.Query(sourceGoogleSheetUrl);
+        query.send(handleQueryResponse);
+      }
+
+      function handleQueryResponse(response) {
+        var data = response.getDataTable();
+        tweakData(data);
+
+        var chart = new google.visualization.Table(document.getElementById("taplistDiv"));
+        chart.draw(data, {showRowNumber: false, width: '100%', height: '100%',
+          alternatingRowStyle: true,
+          cssClassNames: {
+            headerRow: "taplistHeaderRow",
+            tableRow: "tapRowEven",
+            oddTableRow: "tapRowOdd",
+            tableCell: "taplistCell",
+            headerCell: "taplistHeaderCell",
+            hoverTableRow: "taplistHoverRow"
+          }});
+      }
+
+      var tapper = {
+        columns: {
+          kind: 3,
+          pour: 4,
+          abv: 6
+        }
+      };
+
+      function tweakData(aDable) {
+        console.log("rows: " + aDable.getNumberOfRows());
+        //dumpColumn(aDable, 0);//tapper.columns.abv);
+
+        // In ABV column, suppress "%"
+        for(var i=0; i < aDable.getNumberOfRows(); i++) {
+          var val = aDable.getValue(i, tapper.columns.abv);
+          aDable.setCell(i, tapper.columns.abv, val, (100 * val).toFixed(1));       
+        }
+
+        // In Pour column, add "oz"
+        for(var i=0; i < aDable.getNumberOfRows(); i++) {
+          var val = aDable.getValue(i, tapper.columns.pour);
+          aDable.setCell(i, tapper.columns.pour, val, val + "oz", {className: "taplistPourCell"});       
+        }                         
+
+        // In Kind column, colorize text                         
+        for(var i=0; i < aDable.getNumberOfRows(); i++) {
+          var val = aDable.getValue(i, tapper.columns.kind);
+          aDable.setCell(i, tapper.columns.kind, val, val, {className: val});       
+        }
+      }
+                         
+      // Dev tools: -------------------------------
+      function dumpColumn(aDT, aColumnNum) {
+        for(var i=0; i < aDT.getNumberOfRows(); i++) {
+          console.log(aDT.getValue(i, aColumnNum));
+        }
+      }
+    </script>
+    <style>
+      body {
+        margin: 0px;
+        overflow: hidden;
+      }
+
+      .google-visualization-table-table {
+        border-collapse: collapse;
+        border: none;
+      }
+
+      .google-visualization-table-table td.taplistCell {
+        border: 0px solid black;
+      }
+
+      .taplistHoverRow {
+        background-color: inherit;
+      }
+      
+      .taplistHeaderRow {
+        color: black;
+        font-size: 40px;
+        background: none rgb(18, 130, 144);
+        border: 0px solid black;
+        height: 60px;
+      }
+      th:nth-child(5) {
+        text-align: right;
+      }
+      
+      .taplistHeaderCell {
+        background: none rgb(18, 130, 144);
+        border: 0px solid red !important; /* rgb(18, 130, 144); */
+        text-align: left;
+      }      
+      
+      .tapRowEven {
+        background-color: #111;
+        color: white;
+        not-font-weight: bold;
+        font-size: 50px;
+      }
+
+      .tapRowOdd {
+        background-color: #333;      
+        color: #EEE;
+        not-font-weight: bold;
+        font-size: 50px;
+      }
+      
+      .taplistPourCell {
+        text-align: right;
+      }
+
+      .Cider {
+        color: #a8a800;
+      }
+
+      .Coffee {
+        color: #91490e;
+      }
+      
+      .Root {
+        color: #91490e;
+      }
+      
+      .IPA {
+        color: #02cc02;
+      }
+
+      .Kombucha {
+        color: #00ffff;
+      }
+
+      .Sour {
+        color: #9b009b;
+      }
+      
+      .Stout {
+        color: #a0522d;
+      }
+    </style>
+  </head>
+  <body>
+<!--    <div id="table_div"></div> -->
+
+    <div id="taplistDiv"></div>
+  </body>
+</html>
