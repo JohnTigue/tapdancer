@@ -36,13 +36,14 @@
         columns: {
           kind: 3,
           pour: 4,
+          price: 5,
           abv: 6
         }
       };
 
       function tweakData(aDable) {
         console.log("rows: " + aDable.getNumberOfRows());
-        dumpColumn(aDable, 0);//tapper.columns.abv);
+        dumpColumn(aDable, tapper.columns.price);
 
         // In ABV column, suppress "%"
         for(var i=0; i < aDable.getNumberOfRows(); i++) {
@@ -56,6 +57,12 @@
           aDable.setCell(i, tapper.columns.pour, val, val + "oz", {className: "taplistPourCell"});       
         }                         
 
+        // In Price column, remove space between "$" and numeric price
+        for(var i=0; i < aDable.getNumberOfRows(); i++) {
+          var val = aDable.getValue(i, tapper.columns.price);
+          aDable.setCell(i, tapper.columns.price, val, "$" + val.toFixed(2));       
+        }                         
+                         
         // In Kind column, colorize text                         
         for(var i=0; i < aDable.getNumberOfRows(); i++) {
           var val = aDable.getValue(i, tapper.columns.kind);

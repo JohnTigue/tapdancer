@@ -36,13 +36,14 @@
         columns: {
           kind: 3,
           pour: 4,
+          price: 5,
           abv: 6
         }
       };
 
       function tweakData(aDable) {
         console.log("rows: " + aDable.getNumberOfRows());
-        //dumpColumn(aDable, 0);//tapper.columns.abv);
+        dumpColumn(aDable, tapper.columns.price);
 
         // In ABV column, suppress "%"
         for(var i=0; i < aDable.getNumberOfRows(); i++) {
@@ -56,12 +57,21 @@
           aDable.setCell(i, tapper.columns.pour, val, val + "oz", {className: "taplistPourCell"});       
         }                         
 
+        // In Price column, remove space between "$" and numeric price
+        for(var i=0; i < aDable.getNumberOfRows(); i++) {
+          var val = aDable.getValue(i, tapper.columns.price);
+          aDable.setCell(i, tapper.columns.price, val, "$" + val.toFixed(2));       
+        }                         
+                         
         // In Kind column, colorize text                         
         for(var i=0; i < aDable.getNumberOfRows(); i++) {
           var val = aDable.getValue(i, tapper.columns.kind);
           aDable.setCell(i, tapper.columns.kind, val, val, {className: val});       
         }
       }
+
+
+
                          
       // Dev tools: -------------------------------
       function dumpColumn(aDT, aColumnNum) {
@@ -90,30 +100,34 @@
       }
       
       .taplistHeaderRow {
-        color: black;
-        font-size: 40px;
+        color: #eee;
         background: none rgb(18, 130, 144);
+        font-size: 48px;
+        font-weight: bold;
         border: 0px solid black;
-        height: 60px;
+        height: 80px;
       }
       th:nth-child(5) {
         text-align: right;
       }
       
       .taplistHeaderCell {
-        background: none rgb(18, 130, 144);
+        font-family: Helvetica  !important; /* Georgia */
+        background: none rgb(8,8,8);
+        /* background: none rgb(18, 130, 144); */
         border: 0px solid red !important; /* rgb(18, 130, 144); */
+        padding: 20px;
         text-align: left;
       }      
       
-      .tapRowEven {
+      .tapRowOdd {
         background-color: #111;
         color: white;
         not-font-weight: bold;
         font-size: 50px;
       }
 
-      .tapRowOdd {
+      .tapRowEven {
         background-color: #333;      
         color: #EEE;
         not-font-weight: bold;
@@ -124,12 +138,22 @@
         text-align: right;
       }
 
+      /* Price column cells */
+      th:nth-child(6), td:nth-child(6) {
+        text-align: right !important;
+      }
+      
+      /* ABV column cells */
+      th:nth-child(7), td:nth-child(7) {
+        text-align: right !important;
+      }
+      
       .Cider {
         color: #a8a800;
       }
 
       .Coffee {
-        color: #91490e;
+        color: #DCB68A; /* #91490e; */
       }
       
       .Root {
@@ -151,6 +175,8 @@
       .Stout {
         color: #a0522d;
       }
+      
+
     </style>
   </head>
   <body>

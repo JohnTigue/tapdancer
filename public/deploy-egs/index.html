@@ -1,14 +1,14 @@
 <html>
   <head>
-    <title>Taplist</title>
+    <title>Peloton's Taplist</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart','table']});
       google.charts.setOnLoadCallback(drawTaplist);
 
-      var queryString  = encodeURIComponent("select B, C, D, E, F, G, H where A = '☑'");// 
-      var sourceGoogleSheetUrl = "https://docs.google.com/spreadsheets/d/1HpNhZCrsrmkkOrYATT8sqvL1MgscMHP8Li_moJEHGgw/gviz/tq?gid=634347005&headers=1&tq=" + queryString;
+      var queryString  = encodeURIComponent("select C, D, E, F, G, H, I where A = '☑'");// 
+      var sourceGoogleSheetUrl = "https://docs.google.com/spreadsheets/d/1b59RUk4_rS_yVPCi7ZuJsdhPpZG9kKivVhIxT44SKzI/gviz/tq?gid=634347005&headers=1&tq=" + queryString;
 
       function drawTaplist() {
         var query = new google.visualization.Query(sourceGoogleSheetUrl);
@@ -34,9 +34,11 @@
 
       var tapper = {
         columns: {
-          kind: 3,
-          pour: 4,
-          abv: 6
+          kind: 2,
+          abv: 3,
+          halfPint: 4,
+          schooner: 5,
+          pint: 6
         }
       };
 
@@ -49,12 +51,6 @@
           var val = aDable.getValue(i, tapper.columns.abv);
           aDable.setCell(i, tapper.columns.abv, val, (100 * val).toFixed(1));       
         }
-
-        // In Pour column, add "oz"
-        for(var i=0; i < aDable.getNumberOfRows(); i++) {
-          var val = aDable.getValue(i, tapper.columns.pour);
-          aDable.setCell(i, tapper.columns.pour, val, val + "oz", {className: "taplistPourCell"});       
-        }                         
 
         // In Kind column, colorize text                         
         for(var i=0; i < aDable.getNumberOfRows(); i++) {
